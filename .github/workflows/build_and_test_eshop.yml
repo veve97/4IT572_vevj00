@@ -53,6 +53,6 @@ jobs:
       - name: Build
         run: |
           npm rebuild node-sass --force
-          npm runn build -- --colors
-          
+          npm run build -- --colors
+
 
