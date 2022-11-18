@@ -1,0 +1,58 @@
+name: Build and tests eshop
+
+on:
+  workflow_dispatch
+jobs:
+  Install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v2.5.0
+        with:
+          token: ${{ secrets.WORKFLOW_TOKEN}}
+
+
+      - name: Setupp NodeJS
+        uses: actions/setup-node@v3.5.1
+        with:
+          node-version: 10
+      
+      - name: Cache node modules
+        uses: actions/cache@v3.0.11
+        with: 
+          path: node_modules
+          key: node_modules-${{ hashFiles('**/package-lock.json')}}
+          restore-keys: node_modules-
+
+      - name: Install packages with npm
+        run: |
+          npm ci
+  
+  Build:
+    needs: Install
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v2.5.0
+        with:
+          token: ${{ secrets.WORKFLOW_TOKEN}}
+
+
+      - name: Setupp NodeJS
+        uses: actions/setup-node@v3.5.1
+        with:
+          node-version: 10
+      
+      - name: Cache node modules
+        uses: actions/cache@v3.0.11
+        with: 
+          path: node_modules
+          key: node_modules-${{ hashFiles('**/package-lock.json')}}
+      - name: Build
+        run: |
+          npm rebuild node-sass --force
+          npm runn build -- --colors
+          
+
